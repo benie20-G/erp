@@ -1,4 +1,4 @@
-package com.example.erp.security;
+package com.erp.security;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;

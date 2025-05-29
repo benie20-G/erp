@@ -1,30 +1,37 @@
-package com.erp.services;
+package com.erp.service;
 
-import com.example.erp.dto.EmployeeDTO;
-import com.example.erp.entity.Employee;
-import com.example.erp.repository.EmployeeRepository;
+import com.erp.dto.EmployeeDTO;
+import com.erp.entity.Employee;
+import com.erp.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     @Transactional
-    public EmployeeDTO createEmployee(EmployeeDTO dto) {
+    public EmployeeDTO createEmployee(EmployeeDTO dto) throws jakarta.mail.MessagingException {
         Employee employee = new Employee();
         mapDtoToEntity(dto, employee);
         employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        employee.setVerificationToken(UUID.randomUUID().toString());
+        employee.setIsVerified(false);
         employee = employeeRepository.save(employee);
+        emailService.sendVerificationEmail(employee);
         return mapEntityToDto(employee);
     }
 
@@ -60,6 +67,36 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+    @Transactional
+    public void verifyEmployee(String token) {
+        Employee employee = employeeRepository.findByVerificationToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid verification token"));
+        if (employee.getIsVerified()) {
+            throw new RuntimeException("Employee already verified");
+        }
+        employee.setIsVerified(true);
+        employee.setVerificationToken(null);
+        employeeRepository.save(employee);
+    }
+
+    @Transactional
+    public void requestPasswordReset(String email) throws jakarta.mail.MessagingException {
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        employee.setResetPasswordToken(UUID.randomUUID().toString());
+        employeeRepository.save(employee);
+        emailService.sendPasswordResetEmail(employee);
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        Employee employee = employeeRepository.findByResetPasswordToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid reset token"));
+        employee.setPassword(passwordEncoder.encode(newPassword));
+        employee.setResetPasswordToken(null);
+        employeeRepository.save(employee);
+    }
+
     private void mapDtoToEntity(EmployeeDTO dto, Employee employee) {
         employee.setCode(dto.getCode());
         employee.setFirstName(dto.getFirstName());
@@ -69,6 +106,9 @@ public class EmployeeService {
         employee.setMobile(dto.getMobile());
         employee.setDateOfBirth(dto.getDateOfBirth());
         employee.setStatus(Employee.Status.valueOf(dto.getStatus()));
+        employee.setVerificationToken(dto.getVerificationToken());
+        employee.setIsVerified(dto.getIsVerified());
+        employee.setResetPasswordToken(dto.getResetPasswordToken());
     }
 
     private EmployeeDTO mapEntityToDto(Employee employee) {
@@ -82,6 +122,9 @@ public class EmployeeService {
         dto.setMobile(employee.getMobile());
         dto.setDateOfBirth(employee.getDateOfBirth());
         dto.setStatus(employee.getStatus().name());
+        dto.setVerificationToken(employee.getVerificationToken());
+        dto.setIsVerified(employee.getIsVerified());
+        dto.setResetPasswordToken(employee.getResetPasswordToken());
         return dto;
     }
 }

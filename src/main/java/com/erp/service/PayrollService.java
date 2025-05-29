@@ -1,8 +1,8 @@
-package com.erp.services;
+package com.erp.service;
 
-import com.example.erp.dto.PayslipDTO;
-import com.example.erp.entity.*;
-import com.example.erp.repository.*;
+import com.erp.dto.PayslipDTO;
+import com.erp.entity.*;
+import com.erp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.erp.entity.Employee;
 
 @Service
 public class PayrollService {
@@ -89,8 +90,9 @@ public class PayrollService {
 
         // The database trigger will create the Message entity
         List<Message> messages = messageRepository.findByEmployee(payslip.getEmployee());
+        Payslip finalPayslip = payslip;
         Message latestMessage = messages.stream()
-                .filter(m -> m.getMonthYear().equals(payslip.getMonth() + "/" + payslip.getYear()))
+                .filter(m -> m.getMonthYear().equals(finalPayslip.getMonth() + "/" + finalPayslip.getYear()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Message not found for payslip"));
         emailService.sendSalaryEmail(latestMessage);

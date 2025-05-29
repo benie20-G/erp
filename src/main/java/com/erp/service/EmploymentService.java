@@ -1,10 +1,10 @@
-package com.example.erp.service;
+package com.erp.service;
 
-import com.example.erp.dto.EmploymentDTO;
-import com.example.erp.entity.Employee;
-import com.example.erp.entity.Employment;
-import com.example.erp.repository.EmployeeRepository;
-import com.example.erp.repository.EmploymentRepository;
+import com.erp.dto.EmploymentDTO;
+import com.erp.entity.Employee;
+import com.erp.entity.Employment;
+import com.erp.repository.EmployeeRepository;
+import com.erp.repository.EmploymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
