@@ -1,4 +1,4 @@
-package com.erp.dtos;
+package com.erp.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

@@ -1,7 +1,7 @@
-package com.erp.repositories;
+package com.erp.repository;
 
-import com.example.erp.entity.Employee;
-import com.example.erp.entity.Message;
+import com.erp.entity.Employee;
+import com.erp.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

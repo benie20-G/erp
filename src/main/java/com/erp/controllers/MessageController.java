@@ -1,13 +1,14 @@
-package com.example.erp.controller;
+package com.erp.controllers;
 
-import com.example.erp.dto.MessageDTO;
-import com.example.erp.service.MessageService;
+import com.erp.dto.MessageDTO;
+import com.erp.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 

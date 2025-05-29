@@ -1,6 +1,6 @@
-package com.erp.repositories;
+package com.erp.repository;
 
-import com.example.erp.entity.Deductions;
+import com.erp.entity.Deductions;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package com.example.erp.service;
+package com.erp.service;
 
-import com.example.erp.entity.Employee;
-import com.example.erp.entity.Message;
+import com.erp.entity.Employee;
+import com.erp.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

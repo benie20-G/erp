@@ -1,8 +1,8 @@
-package com.erp.services;
+package com.erp.service;
 
-import com.example.erp.dto.DeductionsDTO;
-import com.example.erp.entity.Deductions;
-import com.example.erp.repository.DeductionsRepository;
+import com.erp.dto.DeductionsDTO;
+import com.erp.entity.Deductions;
+import com.erp.repository.DeductionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

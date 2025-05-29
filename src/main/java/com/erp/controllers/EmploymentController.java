@@ -1,7 +1,7 @@
-package com.example.erp.controller;
+package com.erp.controllers;
 
-import com.example.erp.dto.EmploymentDTO;
-import com.example.erp.service.EmploymentService;
+import com.erp.dto.EmploymentDTO;
+import com.erp.service.EmploymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;

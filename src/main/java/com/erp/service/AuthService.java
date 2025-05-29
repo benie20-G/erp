@@ -1,20 +1,14 @@
-package com.example.erp.service;
+package com.erp.service;
 
-import com.example.erp.dto.LoginDTO;
-import com.example.erp.entity.Employee;
-import com.example.erp.repository.EmployeeRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.erp.dto.LoginDTO;
+import com.erp.entity.Employee;
+import com.erp.repository.EmployeeRepository;
+import com.erp.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthService {
@@ -24,11 +18,8 @@ public class AuthService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     public String login(LoginDTO loginDTO) {
         Employee employee = employeeRepository.findByEmail(loginDTO.getEmail())
@@ -41,15 +32,6 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", employee.getRoles());
-
-        return Jwts.builder()
-                .setSubject(loginDTO.getEmail())
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+        return jwtTokenProvider.generateToken(loginDTO.getEmail(), employee.getRoles());
     }
 }

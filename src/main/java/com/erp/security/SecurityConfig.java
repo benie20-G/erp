@@ -1,7 +1,7 @@
-package com.example.erp.config;
+package com.erp.security;
 
-import com.example.erp.security.JwtAuthenticationFilter;
-import com.example.erp.security.JwtTokenProvider;
+import com.erp.security.JwtAuthenticationFilter;
+import com.erp.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
